@@ -9,5 +9,6 @@ package Modeles;
  * @author juja
  */
 public class Devis {
-    
+    private int id;
+    private int montant;
 }

@@ -3,12 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vues;
+import Modeles.Client;
+import Modeles.RequeteSql;
+import Validateur.ValidateurFormClient;
 
 /**
  *
  * @author juja
  */
 public class FormulaireAjoutClient extends javax.swing.JFrame {
+    
 
     /**
      * Creates new form FormulaireAjoutClient
@@ -33,6 +37,7 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txttelephoneclient = new javax.swing.JTextField();
         btnajoutclient = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ajouter un client");
@@ -53,15 +58,31 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         });
 
         btnajoutclient.setText("Ajouter");
+        btnajoutclient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnajoutclientActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Retour à l'accueil");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnajoutclient, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -72,21 +93,15 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(txtnomclient, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnajoutclient, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(117, 117, 117))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(txttelephoneclient)))))
+                        .addGap(26, 26, 26)
+                        .addComponent(txttelephoneclient)))
                 .addGap(31, 31, 31))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
@@ -97,9 +112,11 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txttelephoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
-                .addComponent(btnajoutclient, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnajoutclient, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addGap(33, 33, 33))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -119,6 +136,31 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
     private void txttelephoneclientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttelephoneclientActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txttelephoneclientActionPerformed
+
+    private void btnajoutclientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnajoutclientActionPerformed
+        // TODO add your handling code here:
+        String nom = txtnomclient.getText();
+        String telephone = txttelephoneclient.getText();
+        if(ValidateurFormClient.validerFormAjout(nom, telephone))
+        {
+            Client client = new Client(nom, telephone);
+            // on instancie la classe requte
+            RequeteSql requeteSql = new RequeteSql();
+            requeteSql.creerClient(client); 
+            txtnomclient.setText("");
+            txttelephoneclient.setText("");
+            txtnomclient.requestFocus();
+        }
+    }//GEN-LAST:event_btnajoutclientActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        PageAccueil pageaccueil = new PageAccueil();
+        pageaccueil.setVisible(true);
+        pageaccueil.setLocationRelativeTo(null);
+        // pour fermer le formulaire courant
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,11 +199,12 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnajoutclient;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField txtnomclient;
-    private javax.swing.JTextField txttelephoneclient;
+    public javax.swing.JPanel jPanel1;
+    public javax.swing.JTextField txtnomclient;
+    public javax.swing.JTextField txttelephoneclient;
     // End of variables declaration//GEN-END:variables
 }

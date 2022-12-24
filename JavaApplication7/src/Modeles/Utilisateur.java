@@ -9,5 +9,8 @@ package Modeles;
  * @author juja
  */
 public class Utilisateur {
-    
+    private  String nom;
+    private String telephone;
+    private String localisation;
+    private  String numregistrecorm;
 }

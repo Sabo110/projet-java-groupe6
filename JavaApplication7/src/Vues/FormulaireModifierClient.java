@@ -3,7 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vues;
-
+import java.sql.ResultSet;
+import Modeles.RequeteSql;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import Validateur.ValidateurFormClient;
 /**
  *
  * @author juja
@@ -31,10 +36,22 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         cmbnomclientpourmodification = new javax.swing.JComboBox<>();
         btnmodifierclient = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtnouveauphoneclient = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        cmbtelephonepourmodificationclient = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        txtnouveaunomclient = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modifier un client");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -42,9 +59,31 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
 
         jLabel2.setText("Nom du client : ");
 
-        cmbnomclientpourmodification.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbnomclientpourmodification.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbnomclientpourmodificationActionPerformed(evt);
+            }
+        });
 
         btnmodifierclient.setText("Modifier");
+        btnmodifierclient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnmodifierclientActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Nouveau Telephone : ");
+
+        jLabel4.setText("Telephone : ");
+
+        jLabel5.setText("Nouveau Nom : ");
+
+        jButton1.setText("Retour à l'accueil");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -52,30 +91,63 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(jLabel2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel1))
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnmodifierclient, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbnomclientpourmodification, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnmodifierclient, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(60, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(42, 42, 42)
+                                        .addComponent(jLabel1))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cmbnomclientpourmodification, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbtelephonepourmodificationclient, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtnouveaunomclient, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtnouveauphoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(105, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
                 .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cmbnomclientpourmodification, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
-                .addComponent(btnmodifierclient, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cmbtelephonepourmodificationclient, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtnouveaunomclient, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtnouveauphoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(49, 49, 49)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnmodifierclient, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -91,6 +163,73 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        try {
+            ResultSet resultSet = new RequeteSql().afficherClients();
+            // tant que nous avons une prochaine ligne on l'aafiche dans le jcombox
+            while (resultSet.next()) {
+                cmbnomclientpourmodification.addItem(resultSet.getString("nom"));
+             }
+            //on selection par defaut le premier nom de le jcombobox
+            cmbnomclientpourmodification.setSelectedIndex(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireModifierClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void cmbnomclientpourmodificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbnomclientpourmodificationActionPerformed
+        try {
+            // TODO add your handling code here:
+            //on vide le combobox du telephone du client
+            cmbtelephonepourmodificationclient.removeAllItems();
+            // je recupere le nom du client
+            String nomClient = (cmbnomclientpourmodification.getSelectedItem()).toString();
+            ResultSet resultSet = new RequeteSql().afficherClient(nomClient);
+            while (resultSet.next()) {                
+                cmbtelephonepourmodificationclient.addItem(resultSet.getString("telephone"));
+            }
+            cmbtelephonepourmodificationclient.setSelectedIndex(0);
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireModifierClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cmbnomclientpourmodificationActionPerformed
+
+    private void btnmodifierclientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodifierclientActionPerformed
+        // TODO add your handling code here:
+        String anciennom = cmbnomclientpourmodification.getSelectedItem().toString();
+        String ancienphone = cmbtelephonepourmodificationclient.getSelectedItem().toString();
+        String nouveaunom = txtnouveaunomclient.getText();
+        String nouveauphone = txtnouveauphoneclient.getText();
+        
+        if(ValidateurFormClient.validerModifier(nouveaunom, nouveauphone))
+        {
+            if(nouveaunom.length() == 0)
+            {
+                nouveaunom = anciennom;
+            }
+            else if (nouveauphone.length() == 0)
+            {
+                nouveaunom = ancienphone;
+            }
+            
+            new  RequeteSql().modifierClient(anciennom, nouveaunom, nouveauphone);
+            txtnouveaunomclient.setText("");
+            txtnouveauphoneclient.setText("");
+            txtnouveaunomclient.requestFocus();
+        }
+        
+    }//GEN-LAST:event_btnmodifierclientActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        PageAccueil pageaccueil = new PageAccueil();
+        pageaccueil.setVisible(true);
+        pageaccueil.setLocationRelativeTo(null);
+        // pour fermer le formulaire courant
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -130,8 +269,15 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnmodifierclient;
     private javax.swing.JComboBox<String> cmbnomclientpourmodification;
+    public javax.swing.JComboBox<String> cmbtelephonepourmodificationclient;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField txtnouveaunomclient;
+    private javax.swing.JTextField txtnouveauphoneclient;
     // End of variables declaration//GEN-END:variables
 }

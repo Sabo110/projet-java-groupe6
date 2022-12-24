@@ -3,7 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vues;
-
+import  java.sql.ResultSet;
+import Modeles.RequeteSql;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author juja
@@ -31,10 +35,16 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         cmbnomarticlepoursuppression = new javax.swing.JComboBox<>();
         btnsupprimerarticle = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Supprimer un article");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -42,9 +52,19 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
 
         jLabel2.setText("Nom de l'article : ");
 
-        cmbnomarticlepoursuppression.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnsupprimerarticle.setText("Supprimer");
+        btnsupprimerarticle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsupprimerarticleActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Retour à l'accueil");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -57,40 +77,87 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(43, 43, 43)
-                        .addComponent(jLabel2)
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnsupprimerarticle)
-                            .addComponent(cmbnomarticlepoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(120, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnsupprimerarticle))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(29, 29, 29)
+                                .addComponent(cmbnomarticlepoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addGap(39, 39, 39)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cmbnomarticlepoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
-                .addComponent(btnsupprimerarticle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnsupprimerarticle, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                .addGap(63, 63, 63))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        PageAccueil pageaccueil = new PageAccueil();
+        pageaccueil.setVisible(true);
+        pageaccueil.setLocationRelativeTo(null);
+        // pour fermer le formulaire courant
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            // TODO add your handling code here:
+            ResultSet resultSet = new RequeteSql().afficherArticles();
+            while (resultSet.next()) { 
+                cmbnomarticlepoursuppression.addItem(resultSet.getString("libele"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireSupprimerArticle.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnsupprimerarticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsupprimerarticleActionPerformed
+        // TODO add your handling code here:
+        // on recupere l'indice de l'element dans la jcombobox
+            int index = cmbnomarticlepoursuppression.getSelectedIndex();
+            
+            // on supprime l'element selectionné dans la jcombobox
+           if(new RequeteSql().supprimerArticle(cmbnomarticlepoursuppression.getSelectedItem().toString()))
+           {
+               // on retire l'element supprimer supprimer de la jcombobox
+                cmbnomarticlepoursuppression.removeItemAt(index);
+           }
+            
+           
+        
+    }//GEN-LAST:event_btnsupprimerarticleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -130,6 +197,7 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnsupprimerarticle;
     private javax.swing.JComboBox<String> cmbnomarticlepoursuppression;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
