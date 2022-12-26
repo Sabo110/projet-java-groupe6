@@ -19,7 +19,7 @@ public class ConnexionBd {
             // avant de faire la chaine de connxion on instancie le driver
             Class.forName("com.mysql.jdbc.Driver");
             // on fait la chaine de connexion
-            connexion = DriverManager.getConnection("jdbc:mysql://localhost/gestion_devis", "root", "");
+            connexion = DriverManager.getConnection("jdbc:mysql://localhost/gest_devis", "root", "");
             return  connexion;
         } catch (Exception ex) {
             ex.printStackTrace();

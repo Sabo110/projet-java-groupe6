@@ -3,19 +3,33 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Vues;
-
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import Modeles.Icon;
+import Validateur.ValidateurFormParmetres;
+import Modeles.RequeteSql;
+import Modeles.Utilisateur;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import Modeles.Fichier;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  *
  * @author juja
  */
 public class FormulaireParmetre extends javax.swing.JFrame {
-
+    File fichierSelecttione;
+    String ancienphone;
     /**
      * Creates new form FormulaireParmetre
      */
     public FormulaireParmetre() {
         initComponents();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,22 +43,28 @@ public class FormulaireParmetre extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtnomuser = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtlocuser = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtphoneuser = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        txtnumcormuser = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jlbllogo = new javax.swing.JLabel();
+        txtlienimage = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Paramètres");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -56,23 +76,31 @@ public class FormulaireParmetre extends javax.swing.JFrame {
 
         jLabel4.setText("Telephone : ");
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txtphoneuser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txtphoneuserActionPerformed(evt);
             }
         });
 
         jLabel5.setText("Numero de cormmerce : ");
 
-        jButton1.setText("Enregistrer");
+        txtnumcormuser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnumcormuserActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Retour à l'acceuil");
+        jButton4.setText("Choisir votre logo");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
-        jLabel6.setText("jLabel6");
+        jlbllogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlbllogo.setText("logo");
 
-        jFormattedTextField1.setText("jFormattedTextField1");
-
-        jButton3.setText("Modifier");
+        txtlienimage.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -81,29 +109,31 @@ public class FormulaireParmetre extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(129, 129, 129)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jButton4))
+                .addGap(56, 56, 56)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(56, 56, 56)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField1)
-                                .addComponent(jTextField2)
-                                .addComponent(jTextField3)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtnomuser)
+                                    .addComponent(txtlocuser))
+                                .addGap(24, 24, 24)))
+                        .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtphoneuser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                            .addComponent(txtnumcormuser, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtlienimage, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addContainerGap(185, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,37 +142,50 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel6))
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(164, 164, 164)
+                            .addComponent(jLabel2)
+                            .addComponent(txtnomuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(17, 17, 17))))
+                            .addComponent(jLabel3)
+                            .addComponent(txtlocuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtphoneuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtnumcormuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtlienimage, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
+
+        jButton3.setText("Modifier");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Retour à l'acceuil");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Enregistrer");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -151,20 +194,155 @@ public class FormulaireParmetre extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(133, 133, 133)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txtphoneuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtphoneuserActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txtphoneuserActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        // on creer un jfilechooser qui va nous servir de boite de dialogue
+        JFileChooser jFileChooser = new JFileChooser();
+        // on creer un filtre pour les images à accepter
+        FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter("iamges", "jpg", "png");
+        // on associe ce filtre au jfilechosser
+        jFileChooser.addChoosableFileFilter(fileNameExtensionFilter);
+        // on creer la boite de dialogue 
+        //cette methode renvera un resutat qui nous dira si l'utilisateur à : 
+        //annulé oucliquer sur ouvrir (ou  enregistrer) 
+        int res = jFileChooser.showOpenDialog(null);
+        // si il a cliquer sur ouvrir
+        if(res == JFileChooser.APPROVE_OPTION)
+        {
+            // on recupere le fichier selectionné
+          fichierSelecttione =   jFileChooser.getSelectedFile();
+          // on recupere son chemin absolu
+          String path = fichierSelecttione.getAbsolutePath();
+          // on l'affiche dans le jlabel souhaite en redimentionnant pour qu'elle s'adapte au jlabel
+          jlbllogo.setIcon(Icon.resize(path, jlbllogo));
+          txtlienimage.setText(path);
+          
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if(ValidateurFormParmetres.validerAjout(txtnomuser, txtlocuser, txtphoneuser, txtnumcormuser, txtlienimage))
+        {
+            Utilisateur u = new Utilisateur(
+                    txtnomuser.getText(),
+                    txtphoneuser.getText(), 
+                    txtlocuser.getText(), 
+                    txtnumcormuser.getText(),
+                    fichierSelecttione
+            );
+            try {
+                new RequeteSql().creerParametre(u);
+                // on efface la contenu du fichier
+                Fichier.supprimeContenu(new File("D:/devis.txt"));
+                // on ecrit true
+                Fichier.ecrire(new File("D:/devis.txt"), "true");
+                // on ecrit son numero de telephone dans le fichier
+                Fichier.ecrire(new File("D:/user.txt"), txtphoneuser.getText());
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FormulaireParmetre.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtnumcormuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnumcormuserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtnumcormuserActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        
+        if(ValidateurFormParmetres.validerAjout(txtnomuser, txtlocuser, txtphoneuser, txtnumcormuser, txtlienimage))
+        {
+           if(!fichierSelecttione.exists())
+           {
+               
+           }
+            try {
+                new RequeteSql().modifierParametre(
+                        Fichier.lire(new File("D:/user.txt")),
+                        txtnomuser.getText(),
+                        txtlocuser.getText(),
+                        txtphoneuser.getText(),
+                        fichierSelecttione,
+                        txtnumcormuser.getText());
+                Fichier.supprimeContenu(new File("D:/user.txt"));
+                Fichier.ecrire(new File("D:/user.txt"), txtphoneuser.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        // si le fichier est non vide
+        System.out.println(Fichier.lire(new File("D:/user.txt")));
+        if(Fichier.lire(new File("D:/user.txt")) != null)
+        {
+            // on recupere le resultat
+            ResultSet resultSet = new RequeteSql().afficheUser(Fichier.lire(new File("D:/user.txt")));
+            try {
+                // on charge notre formulaire
+                if(resultSet.next())
+                {
+                    txtnomuser.setText(resultSet.getString("nom"));
+                    txtlocuser.setText(resultSet.getString("localisation"));
+                    txtphoneuser.setText(resultSet.getString("telephone"));
+                    txtnumcormuser.setText(resultSet.getString("num_registre_corm"));
+                    jlbllogo.setIcon(Icon.icon(resultSet.getBytes("logo"), jlbllogo));
+                    txtlienimage.setText("image");
+                    
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       
+        // TODO add your handling code here:
+        /*PageAccueil pageaccueil = new PageAccueil();
+        pageaccueil.setVisible(true);
+        pageaccueil.setLocationRelativeTo(null);*/
+        
+        PageAccueil.main(null);
+        
+        // pour fermer le formulaire courant
+        dispose();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,23 +377,27 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                 new FormulaireParmetre().setVisible(true);
             }
         });
+        
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    static javax.swing.JLabel jlbllogo;
+    private javax.swing.JTextField txtlienimage;
+    static javax.swing.JTextField txtlocuser;
+    static javax.swing.JTextField txtnomuser;
+    static javax.swing.JTextField txtnumcormuser;
+    static javax.swing.JTextField txtphoneuser;
     // End of variables declaration//GEN-END:variables
 }

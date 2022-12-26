@@ -4,8 +4,10 @@
  */
 package Vues;
 import Modeles.Client;
+import Modeles.Fichier;
 import Modeles.RequeteSql;
 import Validateur.ValidateurFormClient;
+import java.io.File;
 
 /**
  *
@@ -146,7 +148,10 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
             Client client = new Client(nom, telephone);
             // on instancie la classe requte
             RequeteSql requeteSql = new RequeteSql();
-            requeteSql.creerClient(client); 
+            int idClient =  requeteSql.creerClient(client); 
+            System.out.println(idClient);
+            // on associe le client à l'utilisateur
+            new RequeteSql().lierUserClient(Fichier.lire(new File("D:/user.txt")), idClient);
             txtnomclient.setText("");
             txttelephoneclient.setText("");
             txtnomclient.requestFocus();

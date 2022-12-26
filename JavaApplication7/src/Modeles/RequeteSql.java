@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Modeles;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -10,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
+import Modeles.Fichier;
+
 /**
  *
  * @author juja
@@ -18,22 +24,43 @@ public class RequeteSql {
     private Statement statement;
     private PreparedStatement pst;
     
+    
     // creeons la requete pour inserer un client
-    public void creerClient(Client c)
+    public int creerClient(Client c)
     {
         try {
-            // on fait une requete prepare à partir de l'objet connection
-          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO client (nom, telephone) VALUES (?, ?)");
+            // on fait une requete prepare à partir de l'objet connection et on retourne la valeur de la cle primaire lors de l'enregistrement
+          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO client (nom, telephone) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS);
           // on lit les parametres de la requetes avec les valeurs de l'objet de type client
           this.pst.setString(1, c.getNomClient());
           this.pst.setString(2, c.getTelephoneClient());
           // on execute la requete
-          this.pst.executeUpdate();
-          // on affiche un message dans une boite de dialogue
+           this.pst.executeUpdate();
+           // on affiche un message dans une boite de dialogue
             JOptionPane.showMessageDialog(null, "Enregistré avec succès !");
+             // on retourne l'id du client enregistré
+             ResultSet rs = this.pst.getGeneratedKeys();
+             rs.next();
+             return  rs.getInt(1);
+             
         } catch (SQLException ex) {
-            Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            ex.printStackTrace();
+            return 0;
+        }
+       
+    }
+    
+    // asscocier client et utilisateur
+    
+    public void lierUserClient(String phoneUser, int idClient)
+    {
+        try {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("INSERT INTO utilisateur_client (teluser, id_cl) VALUES (?,?)");
+            this.pst.setString(1, phoneUser);
+            this.pst.setInt(2, idClient);
+            this.pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -74,6 +101,10 @@ public class RequeteSql {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    
+    
     
     // requete pour recuperer les clients
     
@@ -187,6 +218,63 @@ public class RequeteSql {
             
         }
         
+    }
+    
+    public void creerParametre(Utilisateur u) throws FileNotFoundException 
+    {
+        try {
+            // on prepare notre requete
+            this.pst = ConnexionBd.getConnexion().prepareStatement("INSERT INTO utilisateur (nom, localisation, logo, telephone, num_registre_corm) VALUES (?,?,?,?,?)");
+            InputStream f = new FileInputStream(u.getLogo());
+            this.pst.setString(1, u.getNom());
+            this.pst.setString(2, u.getLocalisation());
+            this.pst.setBlob(3, f);
+            this.pst.setString(4, u.getTelephone());
+            this.pst.setString(5, u.getNumregistrecorm());
+            this.pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "enregistré avec succès");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
+            
+            
+        }
+    }
+    
+    public void modifierParametre(String ancienPhone, String nouveauNom, String nouveauloc, String nouveauPhone,File nouveauLogo,  String nouveauNumcorm) throws FileNotFoundException 
+    {
+        try {
+            // on prepare notre requete
+            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE utilisateur SET nom = ?, localisation = ?, telephone = ?, logo = ?, num_registre_corm = ? WHERE telephone = ?");
+            InputStream f = new FileInputStream(nouveauLogo);
+            this.pst.setString(1, nouveauNom);
+            this.pst.setString(2, nouveauloc);
+            this.pst.setString(3, nouveauPhone);
+            this.pst.setBlob(4, f);
+            this.pst.setString(5, nouveauNumcorm);
+            this.pst.setString(6, ancienPhone);
+            this.pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "modifié avec succès");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
+            
+            
+        }
+    }
+    
+    // afficher un utilisateur
+    
+    public ResultSet afficheUser(String phone)
+    {
+        try {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM utilisateur WHERE telephone = ?");
+            this.pst.setString(1, phone); // je recupere le numero de telephone de l'utilisateur dans le fichier user.txt
+            return this.pst.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace(); // on affiche l'exception dans la console
+            return null;
+        }
     }
     
     
