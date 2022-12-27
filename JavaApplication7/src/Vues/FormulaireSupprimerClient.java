@@ -82,7 +82,7 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbnomclientpoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnsupprimerclient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,7 +93,7 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cmbnomclientpoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnsupprimerclient, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
@@ -104,15 +104,11 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 14, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -121,16 +117,18 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
     private void btnsupprimerclientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsupprimerclientActionPerformed
         // TODO add your handling code here:
         int index = cmbnomclientpoursuppression.getSelectedIndex();
-        if(new RequeteSql().supprimerClient(cmbnomclientpoursuppression.getSelectedItem().toString()))
-        {
+         new RequeteSql().supprimerClientUser(cmbnomclientpoursuppression.getSelectedItem().toString());
+        
             cmbnomclientpoursuppression.removeItemAt(index);
-        }
+        
     }//GEN-LAST:event_btnsupprimerclientActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         try {
             // TODO add your handling code here:
-            ResultSet resultSet = new RequeteSql().afficherClients();
+            ResultSet resultSet = new RequeteSql().afficherClientsUser();
             while (resultSet.next()) {
                 cmbnomclientpoursuppression.addItem(resultSet.getString("nom"));
             }
@@ -145,7 +143,7 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
         pageaccueil.setVisible(true);
         pageaccueil.setLocationRelativeTo(null);
         // pour fermer le formulaire courant
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -181,11 +179,13 @@ public class FormulaireSupprimerClient extends javax.swing.JFrame {
                 new FormulaireSupprimerClient().setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnsupprimerclient;
-    private javax.swing.JComboBox<String> cmbnomclientpoursuppression;
+    static javax.swing.JComboBox<String> cmbnomclientpoursuppression;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

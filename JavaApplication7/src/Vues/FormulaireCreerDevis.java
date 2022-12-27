@@ -4,11 +4,23 @@
  */
 package Vues;
 
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import Modeles.RequeteSql;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author juja
  */
 public class FormulaireCreerDevis extends javax.swing.JFrame {
+    public static String ancienarticle;
+    public static String ancienprix;
+    public static String ancienqt;
+    public static int numrow;
 
     /**
      * Creates new form FormulaireCreerDevis
@@ -27,7 +39,6 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cmbnomclientcreerdevis = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
@@ -38,22 +49,36 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbcreerdevis = new javax.swing.JTable();
         btncreerdevis = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        cmbprixarticlecreerdevis = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        lblnomclient = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        btnmodifier = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Creer un devis");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("Creer un devis");
-
         jLabel2.setText("Nom du client : ");
 
-        cmbnomclientcreerdevis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbnomclientcreerdevis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbnomclientcreerdevisActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Libele de l'article : ");
 
-        cmblibelearticlecreerdevis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmblibelearticlecreerdevis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmblibelearticlecreerdevisActionPerformed(evt);
@@ -63,69 +88,144 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
         jLabel4.setText("Quantité : ");
 
         btnajouterarticlecreerdevis.setText("Ajouter l'article au devis");
+        btnajouterarticlecreerdevis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnajouterarticlecreerdevis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnajouterarticlecreerdevisActionPerformed(evt);
+            }
+        });
 
         tbcreerdevis.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Article", "Quantité", "prix", "Total"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbcreerdevis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbcreerdevisMouseClicked(evt);
+            }
+        });
+        tbcreerdevis.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tbcreerdevisPropertyChange(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbcreerdevis);
 
         btncreerdevis.setText("Creer le devis");
+        btncreerdevis.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btncreerdevis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncreerdevisActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Prix : ");
+
+        jLabel1.setText("Devis du client  : ");
+
+        jLabel6.setText("NOTE :  avant de modifier ou supprimer une ligne cliquez juste sur cette ligne !!");
+
+        btnmodifier.setText("Modifier");
+        btnmodifier.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnmodifier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnmodifierActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Supprimer");
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Retour à l'accueil");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addGap(27, 27, 27)
-                            .addComponent(cmbnomclientcreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel3))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(cmblibelearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(spquantitearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnajouterarticlecreerdevis))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addComponent(btncreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(cmbnomclientcreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(cmblibelearticlecreerdevis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addGap(28, 28, 28)
+                                    .addComponent(spquantitearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(35, 35, 35)
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cmbprixarticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnajouterarticlecreerdevis)
+                                .addGap(29, 29, 29)
+                                .addComponent(btnmodifier, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44)
+                                .addComponent(jButton1))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(124, 124, 124)
+                        .addComponent(btncreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(412, 412, 412)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addContainerGap(729, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46))))
+                        .addGap(37, 37, 37)
+                        .addComponent(lblnomclient, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addGap(29, 29, 29)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(lblnomclient, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(48, Short.MAX_VALUE))
+                        .addContainerGap(30, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -134,28 +234,36 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(cmblibelearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(spquantitearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
-                        .addComponent(btnajouterarticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(spquantitearticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cmbprixarticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnajouterarticlecreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnmodifier, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btncreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addGap(24, 24, 24))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 21, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -163,7 +271,120 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
 
     private void cmblibelearticlecreerdevisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmblibelearticlecreerdevisActionPerformed
         // TODO add your handling code here:
+        
+        // on met le prix de l'article selectionne dans le jcombobox
+        ResultSet resultSet = new RequeteSql().getArticleUser(cmblibelearticlecreerdevis.getSelectedItem().toString());
+        try {
+            if(resultSet.next())
+            {
+                cmbprixarticlecreerdevis.removeAllItems();
+                String prix = String.valueOf(resultSet.getInt("prix"));
+                cmbprixarticlecreerdevis.addItem(prix);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireCreerDevis.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cmblibelearticlecreerdevisActionPerformed
+
+    private void btnajouterarticlecreerdevisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnajouterarticlecreerdevisActionPerformed
+        // TODO add your handling code here:
+        // on recupere le model su jtable
+        DefaultTableModel tbModel =  (DefaultTableModel)tbcreerdevis.getModel();
+        // on ajoute une ligne
+        int qt =  Integer.parseInt(spquantitearticlecreerdevis.getValue().toString());
+        int pri = Integer.parseInt(cmbprixarticlecreerdevis.getSelectedItem().toString());
+        tbModel.addRow(
+                new Object[]{
+                    cmblibelearticlecreerdevis.getSelectedItem().toString(), 
+                    spquantitearticlecreerdevis.getValue().toString(),
+                    cmbprixarticlecreerdevis.getSelectedItem().toString(),
+                    String.valueOf(pri*qt)
+                });
+    }//GEN-LAST:event_btnajouterarticlecreerdevisActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+        
+        //cmbnomclientcreerdevis.removeAllItems();
+        ResultSet resultSet = new RequeteSql().afficherClientsUser();
+        try {
+            while(resultSet.next())
+            {
+                cmbnomclientcreerdevis.addItem(resultSet.getString("nom"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireCreerDevis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //cmblibelearticlecreerdevis.removeAllItems();
+        resultSet = new RequeteSql().afficherArticles();
+        try {
+            while(resultSet.next())
+            {
+                cmblibelearticlecreerdevis.addItem(resultSet.getString("libele"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FormulaireCreerDevis.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void cmbnomclientcreerdevisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbnomclientcreerdevisActionPerformed
+        // TODO add your handling code here:
+        lblnomclient.setText(cmbnomclientcreerdevis.getSelectedItem().toString());
+    }//GEN-LAST:event_cmbnomclientcreerdevisActionPerformed
+
+    private void tbcreerdevisPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tbcreerdevisPropertyChange
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tbcreerdevisPropertyChange
+
+    private void tbcreerdevisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbcreerdevisMouseClicked
+        // TODO add your handling code here:
+        // quand on clique sur notre jtable
+        // si les boutons de l'interface sont desactive on ne fais rien dans le cas contraire on ouvre le jframe de modification
+        // on empeche le clic sur une ligne 
+        //tbcreerdevis.setRowSelectionAllowed(false);
+        
+       
+        
+    }//GEN-LAST:event_tbcreerdevisMouseClicked
+
+    private void btncreerdevisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreerdevisActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btncreerdevisActionPerformed
+
+    private void btnmodifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodifierActionPerformed
+        // TODO add your handling code here:
+        
+        // on recupere le numero de la ligne selectionne
+            this.numrow = tbcreerdevis.getSelectedRow();
+            // on recupere toute les valeurs de cette ligne excepter le prix
+            this.ancienarticle = tbcreerdevis.getValueAt(numrow, 0).toString();
+            this.ancienqt = tbcreerdevis.getValueAt(numrow, 1).toString();
+            this.ancienprix = tbcreerdevis.getValueAt(numrow, 2).toString();
+            btnajouterarticlecreerdevis.setEnabled(false);
+            btncreerdevis.setEnabled(false);
+            btnmodifier.setEnabled(false);
+            //on ouvre le formulaire pour la modification d'une ligne du jtable
+            FormModifierLigneJtable frmModifierLigneJtable = new FormModifierLigneJtable();
+            frmModifierLigneJtable.setVisible(true);
+            frmModifierLigneJtable.setLocationRelativeTo(null);
+    }//GEN-LAST:event_btnmodifierActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        ((DefaultTableModel)tbcreerdevis.getModel()).removeRow(tbcreerdevis.getSelectedRow());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        PageAccueil pageaccueil  = new PageAccueil();
+        pageaccueil.setVisible(true);
+        pageaccueil.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -201,17 +422,24 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnajouterarticlecreerdevis;
-    private javax.swing.JButton btncreerdevis;
+    public static javax.swing.JButton btnajouterarticlecreerdevis;
+    public static javax.swing.JButton btncreerdevis;
+    public static javax.swing.JButton btnmodifier;
     private javax.swing.JComboBox<String> cmblibelearticlecreerdevis;
     private javax.swing.JComboBox<String> cmbnomclientcreerdevis;
+    private javax.swing.JComboBox<String> cmbprixarticlecreerdevis;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblnomclient;
     private javax.swing.JSpinner spquantitearticlecreerdevis;
-    private javax.swing.JTable tbcreerdevis;
+    public static javax.swing.JTable tbcreerdevis;
     // End of variables declaration//GEN-END:variables
 }

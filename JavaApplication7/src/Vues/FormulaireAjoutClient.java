@@ -8,6 +8,10 @@ import Modeles.Fichier;
 import Modeles.RequeteSql;
 import Validateur.ValidateurFormClient;
 import java.io.File;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -44,6 +48,11 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ajouter un client");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -114,7 +123,7 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txttelephoneclient, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnajoutclient, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
@@ -129,7 +138,7 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -146,12 +155,19 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         if(ValidateurFormClient.validerFormAjout(nom, telephone))
         {
             Client client = new Client(nom, telephone);
-            // on instancie la classe requte
-            RequeteSql requeteSql = new RequeteSql();
-            int idClient =  requeteSql.creerClient(client); 
-            System.out.println(idClient);
-            // on associe le client à l'utilisateur
-            new RequeteSql().lierUserClient(Fichier.lire(new File("D:/user.txt")), idClient);
+            try {
+                // on verifie si l'utilisateur n'a pas deja enregistré un client de meme nom
+                if(new RequeteSql().afficherClientUser(nom).next())
+                {
+                    JOptionPane.showMessageDialog(null, "vous avez déja enregistré un client avec ce nom");
+                }
+                else
+                {
+                    new RequeteSql().creerClient(client);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(FormulaireAjoutClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
             txtnomclient.setText("");
             txttelephoneclient.setText("");
             txtnomclient.requestFocus();
@@ -164,8 +180,14 @@ public class FormulaireAjoutClient extends javax.swing.JFrame {
         pageaccueil.setVisible(true);
         pageaccueil.setLocationRelativeTo(null);
         // pour fermer le formulaire courant
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments

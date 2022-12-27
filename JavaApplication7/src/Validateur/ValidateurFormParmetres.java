@@ -57,4 +57,39 @@ public class ValidateurFormParmetres {
         return confirm;
     }
     
+    // valider pour la modification
+    
+    public static boolean validerModifier(JTextField nom, JTextField local, JTextField phone, JTextField numcorm)
+    {
+        boolean confirm = true;
+        if(nom.getText().length() == 0)
+        {
+            confirm = false;
+            JOptionPane.showMessageDialog(null, "renseigner le nom");
+        }
+        else if(local.getText().length() == 0)
+        {
+            confirm = false;
+            JOptionPane.showMessageDialog(null, "renseigner une adresse");
+        }
+        else if(phone.getText().length()  == 0)
+        {
+            confirm = false;
+            JOptionPane.showMessageDialog(null, "renseigner un numero de telephone");
+        }
+        else if(numcorm.getText().length() == 0)
+        {
+            confirm = false;
+            JOptionPane.showMessageDialog(null, "renseigner un numero de registre de cormmerce");
+            
+        }
+        else if(phone.getText().length() > 0 && phone.getText().matches("^6[5-9][0-9]{7}$") == false)
+        {
+            confirm  = false;
+            JOptionPane.showMessageDialog(null, "veuillez renseigner un numero de telephone valide (camtel exclus)");
+        }
+        
+        return confirm;
+    }
+    
 }

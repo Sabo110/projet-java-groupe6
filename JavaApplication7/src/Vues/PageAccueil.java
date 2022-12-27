@@ -154,6 +154,11 @@ public class PageAccueil extends javax.swing.JFrame {
 
         jMenuItem8.setText("Creer un devis");
         jMenuItem8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         menudevis.add(jMenuItem8);
 
         jMenuItem9.setText("Modifier un devis");
@@ -244,19 +249,7 @@ public class PageAccueil extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        setLocationRelativeTo(null);
-        if(!valide){
-            menuarticle.setEnabled(false);
-            menuclient.setEnabled(false);
-            menudevis.setEnabled(false);
-            JOptionPane.showMessageDialog(null, "veuillez parametrer l'application pour activer les menus");
-        }
-        else if(valide)
-        {
-            menuarticle.setEnabled(true);
-            menuclient.setEnabled(true);
-            menudevis.setEnabled(true);
-        }
+       
     }//GEN-LAST:event_formWindowOpened
 
     private void menuarticleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuarticleMouseClicked
@@ -278,6 +271,13 @@ public class PageAccueil extends javax.swing.JFrame {
        
         dispose();
     }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+            FormulaireCreerDevis frmCreerDevis = new FormulaireCreerDevis();
+            frmCreerDevis.setVisible(true);
+            frmCreerDevis.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -309,7 +309,9 @@ public class PageAccueil extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PageAccueil().setVisible(true);
+                 PageAccueil pageAccueil = new PageAccueil();
+                 pageAccueil.setVisible(true);
+                 pageAccueil.setLocationRelativeTo(null);
             }
         });
         // on declare un nouveau fichier
@@ -334,6 +336,18 @@ public class PageAccueil extends javax.swing.JFrame {
             Fichier.creerFichier(f2);
         }
        
+        if(!valide){
+            menuarticle.setEnabled(false);
+            menuclient.setEnabled(false);
+            menudevis.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "veuillez parametrer l'application pour activer les menus");
+        }
+        else if(valide)
+        {
+            menuarticle.setEnabled(true);
+            menuclient.setEnabled(true);
+            menudevis.setEnabled(true);
+        }
       
     }
 
@@ -350,8 +364,8 @@ public class PageAccueil extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JMenu menuarticle;
-    private javax.swing.JMenu menuclient;
-    private javax.swing.JMenu menudevis;
+    static javax.swing.JMenu menuarticle;
+    static javax.swing.JMenu menuclient;
+    static javax.swing.JMenu menudevis;
     // End of variables declaration//GEN-END:variables
 }

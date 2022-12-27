@@ -14,15 +14,20 @@ import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Modeles.Fichier;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.Blob;
 /**
  *
  * @author juja
  */
 public class FormulaireParmetre extends javax.swing.JFrame {
     File fichierSelecttione;
-    String ancienphone;
+    Blob imgblob;
+    
+    
     /**
      * Creates new form FormulaireParmetre
      */
@@ -53,9 +58,9 @@ public class FormulaireParmetre extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jlbllogo = new javax.swing.JLabel();
         txtlienimage = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        btncreeruser = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Paramètres");
@@ -102,6 +107,27 @@ public class FormulaireParmetre extends javax.swing.JFrame {
 
         txtlienimage.setEnabled(false);
 
+        jButton2.setText("Retour à l'acceuil");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Modifier");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        btncreeruser.setText("Enregistrer");
+        btncreeruser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncreeruserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -113,27 +139,35 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(jButton2))
                 .addGap(56, 56, 56)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtnomuser)
-                                    .addComponent(txtlocuser))
-                                .addGap(24, 24, 24)))
-                        .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtphoneuser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                            .addComponent(txtnumcormuser, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtlienimage, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addContainerGap(185, Short.MAX_VALUE))))
+                            .addComponent(txtlienimage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                            .addComponent(txtphoneuser, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtnumcormuser))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btncreeruser, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(txtnomuser)
+                                            .addComponent(txtlocuser))
+                                        .addGap(24, 24, 24)))
+                                .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(33, 33, 33))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,70 +183,39 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(txtlocuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtphoneuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtnumcormuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtlienimage, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                            .addComponent(txtlocuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtphoneuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtnumcormuser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtlienimage, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btncreeruser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jlbllogo, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-
-        jButton3.setText("Modifier");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Retour à l'acceuil");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Enregistrer");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(133, 133, 133)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -224,12 +227,13 @@ public class FormulaireParmetre extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        
         // on creer un jfilechooser qui va nous servir de boite de dialogue
         JFileChooser jFileChooser = new JFileChooser();
         // on creer un filtre pour les images à accepter
         FileNameExtensionFilter fileNameExtensionFilter = new FileNameExtensionFilter("iamges", "jpg", "png");
         // on associe ce filtre au jfilechosser
-        jFileChooser.addChoosableFileFilter(fileNameExtensionFilter);
+        jFileChooser.setFileFilter(fileNameExtensionFilter);
         // on creer la boite de dialogue 
         //cette methode renvera un resutat qui nous dira si l'utilisateur à : 
         //annulé oucliquer sur ouvrir (ou  enregistrer) 
@@ -238,7 +242,7 @@ public class FormulaireParmetre extends javax.swing.JFrame {
         if(res == JFileChooser.APPROVE_OPTION)
         {
             // on recupere le fichier selectionné
-          fichierSelecttione =   jFileChooser.getSelectedFile();
+          fichierSelecttione =   jFileChooser.getSelectedFile(); 
           // on recupere son chemin absolu
           String path = fichierSelecttione.getAbsolutePath();
           // on l'affiche dans le jlabel souhaite en redimentionnant pour qu'elle s'adapte au jlabel
@@ -246,9 +250,14 @@ public class FormulaireParmetre extends javax.swing.JFrame {
           txtlienimage.setText(path);
           
         }
+        else if(res == JFileChooser.CANCEL_OPTION) // s'il annuler la selection ou ferme la fenetre le jfilechooser
+        {
+            fichierSelecttione = null;
+            
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btncreeruserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreeruserActionPerformed
         // TODO add your handling code here:
         if(ValidateurFormParmetres.validerAjout(txtnomuser, txtlocuser, txtphoneuser, txtnumcormuser, txtlienimage))
         {
@@ -259,20 +268,31 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                     txtnumcormuser.getText(),
                     fichierSelecttione
             );
+           
             try {
-                new RequeteSql().creerParametre(u);
-                // on efface la contenu du fichier
-                Fichier.supprimeContenu(new File("D:/devis.txt"));
-                // on ecrit true
-                Fichier.ecrire(new File("D:/devis.txt"), "true");
-                // on ecrit son numero de telephone dans le fichier
-                Fichier.ecrire(new File("D:/user.txt"), txtphoneuser.getText());
-                
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FormulaireParmetre.class.getName()).log(Level.SEVERE, null, ex);
+                // on verifie si un utilisateur ayant ce numero de telephone existe déja
+                if(new RequeteSql().afficheUser(txtphoneuser.getText()).next())
+                {
+                    JOptionPane.showMessageDialog(null, "un utilisateur ayant ce numero de telephone existe");
+                }
+                else
+                {
+                    // on creer l'utilisateur
+                    new RequeteSql().creerParametre(u);
+                    // on efface la contenu du fichier
+                    Fichier.supprimeContenu(new File("D:/devis.txt"));
+                    // on ecrit true
+                    Fichier.ecrire(new File("D:/devis.txt"), "true");
+                    // on ecrit son numero de telephone dans le fichier
+                    Fichier.ecrire(new File("D:/user.txt"), txtphoneuser.getText());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
+                
+                
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btncreeruserActionPerformed
 
     private void txtnumcormuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnumcormuserActionPerformed
         // TODO add your handling code here:
@@ -281,20 +301,31 @@ public class FormulaireParmetre extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         
-        if(ValidateurFormParmetres.validerAjout(txtnomuser, txtlocuser, txtphoneuser, txtnumcormuser, txtlienimage))
+        if(ValidateurFormParmetres.validerModifier(txtnomuser, txtlocuser, txtphoneuser, txtnumcormuser))
         {
-           if(!fichierSelecttione.exists())
-           {
-               
-           }
+           
             try {
-                new RequeteSql().modifierParametre(
+                // si l'utilisateur n'a pas modifier son logo on lui passe le logo actuel imgblob
+                if(txtlienimage.getText().length() == 0){
+                    
+                
+                new RequeteSql().modifierParametreLogoInchanger(
                         Fichier.lire(new File("D:/user.txt")),
                         txtnomuser.getText(),
                         txtlocuser.getText(),
                         txtphoneuser.getText(),
-                        fichierSelecttione,
                         txtnumcormuser.getText());
+                }
+                else
+                {
+                    new RequeteSql().modifierParametreLogochange(
+                            Fichier.lire(new File("D:/user.txt")), 
+                            txtnomuser.getText(), 
+                            txtlocuser.getText(), 
+                            txtphoneuser.getText(), 
+                            fichierSelecttione, 
+                            txtnumcormuser.getText());
+                }
                 Fichier.supprimeContenu(new File("D:/user.txt"));
                 Fichier.ecrire(new File("D:/user.txt"), txtphoneuser.getText());
             } catch (Exception ex) {
@@ -305,10 +336,13 @@ public class FormulaireParmetre extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+        
         // si le fichier est non vide
-        System.out.println(Fichier.lire(new File("D:/user.txt")));
+        
         if(Fichier.lire(new File("D:/user.txt")) != null)
         {
+            // on desactive le bouton pour creer un nouvelle utilisateur
+            btncreeruser.setEnabled(false);
             // on recupere le resultat
             ResultSet resultSet = new RequeteSql().afficheUser(Fichier.lire(new File("D:/user.txt")));
             try {
@@ -320,7 +354,8 @@ public class FormulaireParmetre extends javax.swing.JFrame {
                     txtphoneuser.setText(resultSet.getString("telephone"));
                     txtnumcormuser.setText(resultSet.getString("num_registre_corm"));
                     jlbllogo.setIcon(Icon.icon(resultSet.getBytes("logo"), jlbllogo));
-                    txtlienimage.setText("image");
+                    // on initialise la variable de type blob avec le logo actuel de l'utilisateur
+                    imgblob = resultSet.getBlob("logo");
                     
                 }
             } catch (Exception e) {
@@ -333,11 +368,11 @@ public class FormulaireParmetre extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
        
         // TODO add your handling code here:
-        /*PageAccueil pageaccueil = new PageAccueil();
+        PageAccueil pageaccueil = new PageAccueil();
         pageaccueil.setVisible(true);
-        pageaccueil.setLocationRelativeTo(null);*/
+        pageaccueil.setLocationRelativeTo(null);
         
-        PageAccueil.main(null);
+        
         
         // pour fermer le formulaire courant
         dispose();
@@ -383,7 +418,7 @@ public class FormulaireParmetre extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btncreeruser;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

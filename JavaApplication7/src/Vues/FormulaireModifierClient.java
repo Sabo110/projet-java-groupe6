@@ -166,8 +166,10 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         try {
-            ResultSet resultSet = new RequeteSql().afficherClients();
+            ResultSet resultSet = new RequeteSql().afficherClientsUser();
             // tant que nous avons une prochaine ligne on l'aafiche dans le jcombox
             while (resultSet.next()) {
                 cmbnomclientpourmodification.addItem(resultSet.getString("nom"));
@@ -186,8 +188,8 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
             cmbtelephonepourmodificationclient.removeAllItems();
             // je recupere le nom du client
             String nomClient = (cmbnomclientpourmodification.getSelectedItem()).toString();
-            ResultSet resultSet = new RequeteSql().afficherClient(nomClient);
-            while (resultSet.next()) {                
+            ResultSet resultSet = new RequeteSql().afficherClientUser(nomClient);
+            if(resultSet.next()) {                
                 cmbtelephonepourmodificationclient.addItem(resultSet.getString("telephone"));
             }
             cmbtelephonepourmodificationclient.setSelectedIndex(0);
@@ -211,13 +213,15 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
             }
             else if (nouveauphone.length() == 0)
             {
-                nouveaunom = ancienphone;
+                ancienphone = ancienphone;
             }
             
-            new  RequeteSql().modifierClient(anciennom, nouveaunom, nouveauphone);
+            new  RequeteSql().modifierClientUser(anciennom, nouveaunom, nouveauphone);
             txtnouveaunomclient.setText("");
             txtnouveauphoneclient.setText("");
             txtnouveaunomclient.requestFocus();
+            this.dispose();
+            main(null);
         }
         
     }//GEN-LAST:event_btnmodifierclientActionPerformed
@@ -228,7 +232,7 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
         pageaccueil.setVisible(true);
         pageaccueil.setLocationRelativeTo(null);
         // pour fermer le formulaire courant
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -261,15 +265,31 @@ public class FormulaireModifierClient extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormulaireModifierClient().setVisible(true);
+               FormulaireModifierClient frmModifierClient =  new FormulaireModifierClient();
+               frmModifierClient.setVisible(true);
+               frmModifierClient.setLocationRelativeTo(null);
             }
         });
+        
+        // on va charger notre formulaire avec les clients de l'utilisateur
+      /*  
+        try {
+            ResultSet resultSet = new RequeteSql().afficherClientsUser();
+            // tant que nous avons une prochaine ligne on l'aafiche dans le jcombox
+            while (resultSet.next()) {
+                cmbnomclientpourmodification.addItem(resultSet.getString("nom"));
+             }
+            //on selection par defaut le premier nom de le jcombobox
+            cmbnomclientpourmodification.setSelectedIndex(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnmodifierclient;
-    private javax.swing.JComboBox<String> cmbnomclientpourmodification;
-    public javax.swing.JComboBox<String> cmbtelephonepourmodificationclient;
+    static javax.swing.JComboBox<String> cmbnomclientpourmodification;
+    static javax.swing.JComboBox<String> cmbtelephonepourmodificationclient;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

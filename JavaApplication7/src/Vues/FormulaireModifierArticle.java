@@ -173,6 +173,8 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
     }//GEN-LAST:event_txtnouveaunonarticleActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         try {
             // TODO add your handling code here:
             ResultSet resultSet = new RequeteSql().afficherArticles();
@@ -187,11 +189,13 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
     private void cmbnomarticlepourmodificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbnomarticlepourmodificationActionPerformed
         try {
             // TODO add your handling code here:
+            
+            // supprime tous ce qu'il y'a dans le combobox des prix
             cmbprixarticlepourmodification.removeAllItems();
-            // on recuperer nom de l'article selctionné dans le jcombobox
+            // on recupere le libele de l'article selctionné dans le combobox du nom d'article
             String libele = (cmbnomarticlepourmodification.getSelectedItem()).toString();
-            ResultSet resultSet = new RequeteSql().afficherArticle(libele);
-            while (resultSet.next()) {
+            ResultSet resultSet = new RequeteSql().getArticleUser(libele);
+            if(resultSet.next()) {
                cmbprixarticlepourmodification.addItem(resultSet.getString("prix"));
             }
         } catch (SQLException ex) {
@@ -201,6 +205,8 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
 
     private void btnmodifierarticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodifierarticleActionPerformed
         // TODO add your handling code here:
+        int idexAncienlib = cmbnomarticlepourmodification.getSelectedIndex();
+        int indexAncienprix = cmbprixarticlepourmodification.getSelectedIndex();
         String ancienlibele = (cmbnomarticlepourmodification.getSelectedItem()).toString();
         String ancienprix = (cmbprixarticlepourmodification.getSelectedItem()).toString();
         String nouveaulibele = txtnouveaunonarticle.getText();
@@ -217,7 +223,13 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
             }
             
             RequeteSql requeteSql = new RequeteSql();
-            requeteSql.modifierArticle(ancienlibele, nouveaulibele,Integer.parseInt(nouveauprix));
+            requeteSql.modifierArticle(ancienlibele, nouveaulibele, Integer.parseInt(nouveauprix));
+            // on modifie les texts afficher dans les differents combobox
+            //on simule la fermerture puis l'ouverture de ce formulaire pour mettre à jour les donnees modifies
+            dispose();
+            main(null);
+            
+            
             
         }
     }//GEN-LAST:event_btnmodifierarticleActionPerformed
@@ -227,7 +239,7 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
         PageAccueil pageaccueil  = new PageAccueil();
         pageaccueil.setVisible(true);
         pageaccueil.setLocationRelativeTo(null);
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -260,7 +272,12 @@ public class FormulaireModifierArticle extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormulaireModifierArticle().setVisible(true);
+               FormulaireModifierArticle frModifierArticle =  new FormulaireModifierArticle();
+               frModifierArticle.setVisible(true);
+               frModifierArticle.setLocationRelativeTo(null);
+                
+                
+                
             }
         });
     }

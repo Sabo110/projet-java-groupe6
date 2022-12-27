@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import Modeles.Fichier;
+import java.sql.Blob;
 
 /**
  *
@@ -25,80 +26,51 @@ public class RequeteSql {
     private PreparedStatement pst;
     
     
-    // creeons la requete pour inserer un client
-    public int creerClient(Client c)
+    // creeons la requete pour creer un client
+    public void creerClient(Client c)
     {
         try {
             // on fait une requete prepare à partir de l'objet connection et on retourne la valeur de la cle primaire lors de l'enregistrement
-          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO client (nom, telephone) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS);
+          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO client (nom, telephone, teluser) VALUES (?, ?, ?)");
           // on lit les parametres de la requetes avec les valeurs de l'objet de type client
           this.pst.setString(1, c.getNomClient());
           this.pst.setString(2, c.getTelephoneClient());
+          this.pst.setString(3, Fichier.lire(new File("D:/user.txt")));
           // on execute la requete
            this.pst.executeUpdate();
            // on affiche un message dans une boite de dialogue
             JOptionPane.showMessageDialog(null, "Enregistré avec succès !");
              // on retourne l'id du client enregistré
-             ResultSet rs = this.pst.getGeneratedKeys();
-             rs.next();
-             return  rs.getInt(1);
+             //ResultSet rs = this.pst.getGeneratedKeys();
+             //rs.next();
+             //return  rs.getInt(1);
              
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            
         }
        
     }
     
-    // asscocier client et utilisateur
     
-    public void lierUserClient(String phoneUser, int idClient)
-    {
-        try {
-            this.pst = ConnexionBd.getConnexion().prepareStatement("INSERT INTO utilisateur_client (teluser, id_cl) VALUES (?,?)");
-            this.pst.setString(1, phoneUser);
-            this.pst.setInt(2, idClient);
-            this.pst.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    // supprimer un client d'un utilisateur
     
-    // supprimer un client
-    
-    public boolean supprimerClient(String nom)
+    public void supprimerClientUser(String nom)
     {
         try {
             // on fait une requete prepare à partir de l'objet connection
-          this.pst =   ConnexionBd.getConnexion().prepareStatement("DELETE FROM client WHERE nom = ?");
+          this.pst =   ConnexionBd.getConnexion().prepareStatement("DELETE FROM client WHERE nom = ? AND teluser = ?");
           // on lit les parametres de la requetes avec les valeurs de l'objet de type client
           this.pst.setString(1, nom);
+          this.pst.setString(2, Fichier.lire(new File("D:/user.txt")));
           // on execute la requete
           this.pst.executeUpdate();
           // on affiche un message dans une boite de dialogue
             JOptionPane.showMessageDialog(null, "supprimé avec succès !");
-           return true;
+           
         } catch (SQLException ex) {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
-            return  false;
-        }
-    }
-    
-    // creeons la requete pour inserer un article
-    public void creerArticle(Article a)
-    {
-        try {
-            // on fait une requete prepare à partir de l'objet connection
-          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO article (libele, prix) VALUES (?, ?)");
-          // on lit les parametres de la requetes avec les valeurs de l'objet de type article
-          this.pst.setString(1, a.getLibele());
-          this.pst.setInt(2, a.getPrix());
-          // on execute la requete
-          this.pst.executeUpdate();
-          // on affiche un message dans une boite de dialogue
-            JOptionPane.showMessageDialog(null, "Enregistré avec succès !");
-        } catch (SQLException ex) {
-            Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
     }
     
@@ -106,13 +78,16 @@ public class RequeteSql {
     
     
     
-    // requete pour recuperer les clients
     
-    public ResultSet afficherClients()
+    
+    // requete pour recuperer les clients d'un utilisateur
+    
+    public ResultSet afficherClientsUser()
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM client");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM client WHERE teluser = ?");
+            this.pst.setString(1, Fichier.lire(new File("D:/user.txt")));
             return this.pst.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,13 +95,14 @@ public class RequeteSql {
         }
         
     }
-    // requete pour recuperer un seul client
-    public ResultSet afficherClient(String nom)
+    // requete pour recuperer un seul client d'un utilisateur
+    public ResultSet afficherClientUser(String nom)
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM client WHERE nom = ?");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM client WHERE nom = ? AND teluser = ?");
             this.pst.setString(1, nom);
+            this.pst.setString(2, Fichier.lire(new File("D:/user.txt")));
             return this.pst.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
@@ -136,14 +112,15 @@ public class RequeteSql {
     }
     // pour modifier un client
     
-    public void modifierClient(String anciennom, String nouveaunom, String nouveauphone)
+    public void modifierClientUser(String anciennom, String nouveaunom, String nouveauphone)
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE client SET nom = ? , telephone = ? WHERE nom = ?");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE client SET nom = ? , telephone = ? WHERE nom = ? AND teluser = ?");
             this.pst.setString(1, nouveaunom);
             this.pst.setString(2, nouveauphone);
             this.pst.setString(3, anciennom);
+            this.pst.setString(4, Fichier.lire(new File("D:/user.txt")));
             this.pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "modifié avec succès");
         } catch (SQLException ex) {
@@ -153,12 +130,36 @@ public class RequeteSql {
         
     }
     
-    // recuperer tous les articles
+    // creeons la requete pour creer un article
+    public void creerArticle(Article a)
+    {
+        try {
+            // on fait une requete prepare à partir de l'objet connection
+          this.pst =   ConnexionBd.getConnexion().prepareStatement("INSERT INTO article (libele, prix, teluser) VALUES (?,?,?)");
+          // on lit les parametres de la requetes avec les valeurs de l'objet de type article
+          this.pst.setString(1, a.getLibele());
+          this.pst.setInt(2, a.getPrix());
+          this.pst.setString(3, Fichier.lire(new File("D:/user.txt")));
+          // on execute la requete
+          this.pst.executeUpdate();
+          // on affiche un message dans une boite de dialogue
+            JOptionPane.showMessageDialog(null, "crée avec succès !");
+            //ResultSet rs = this.pst.getGeneratedKeys();
+            //rs.next();
+            //return  rs.getInt(1);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            
+        }
+    }
+    
+    // recuperer tous les articles d'un utilisateur
     public ResultSet afficherArticles()
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM article");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM article WHERE teluser = ?");
+            this.pst.setString(1, Fichier.lire(new File("D:/user.txt")));
             return this.pst.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,8 +168,25 @@ public class RequeteSql {
         
     }
     
+    // recuperer un article d'un utilisateur
+    
+    public ResultSet getArticleUser(String libele)
+    {
+        try 
+        {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM article WHERE teluser = ? AND libele = ?");
+            this.pst.setString(1, Fichier.lire(new File("D:/user.txt")));
+            this.pst.setString(2, libele);
+            return  this.pst.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     // recuperer un seul article
     
+   /*
     public ResultSet afficherArticle(String libele)
     {
         try {
@@ -182,16 +200,18 @@ public class RequeteSql {
         }
         
     }
-    // modifier un article 
+*/
+    // modifier un article d'un utilisateur
     
     public void modifierArticle(String ancienlibele, String nouveaulibele, int nouveauprix)
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE article SET libele = ? , prix = ? WHERE libele = ?");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE article SET libele = ? , prix = ? WHERE teluser = ? AND libele = ? ");
             this.pst.setString(1, nouveaulibele);
             this.pst.setInt(2, nouveauprix);
-            this.pst.setString(3, ancienlibele);
+            this.pst.setString(3, Fichier.lire(new File("D:/user.txt")));
+            this.pst.setString(4, ancienlibele);
             this.pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "modifié avec succès");
         } catch (SQLException ex) {
@@ -201,26 +221,28 @@ public class RequeteSql {
         
     }
     
-    // supprimer un article
+    // supprimer un article d'un utilisateur
     
-    public boolean supprimerArticle(String libele)
+    public void supprimerArticleUser(String libele)
     {
         try {
             // on prepare notre requete
-            this.pst = ConnexionBd.getConnexion().prepareStatement("DELETE FROM article WHERE libele = ?");
+            this.pst = ConnexionBd.getConnexion().prepareStatement("DELETE FROM article WHERE libele = ? AND teluser = ?");
             this.pst.setString(1, libele);
+            this.pst.setString(2, Fichier.lire(new File("D:/user.txt")));
             this.pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "supprimé avec succès");
-            return true;
+            
         } catch (SQLException ex) {
             Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            
             
         }
         
     }
     
-    public void creerParametre(Utilisateur u) throws FileNotFoundException 
+    // enregistrer les parametres d'un utilisateur
+    public void creerParametre(Utilisateur u)
     {
         try {
             // on prepare notre requete
@@ -234,23 +256,48 @@ public class RequeteSql {
             this.pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "enregistré avec succès");
             
-        } catch (SQLException ex) {
-            Logger.getLogger(RequeteSql.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            e.printStackTrace();
             
             
         }
     }
     
-    public void modifierParametre(String ancienPhone, String nouveauNom, String nouveauloc, String nouveauPhone,File nouveauLogo,  String nouveauNumcorm) throws FileNotFoundException 
+    // modifier les parametres d'un utilisateur cas où il ne change pas de logo
+    public void modifierParametreLogoInchanger(String ancienPhone, String nouveauNom, String nouveauloc, String nouveauPhone,  String nouveauNumcorm) 
+    {
+        try {
+            // on prepare notre requete
+            this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE utilisateur SET nom = ?, localisation = ?, telephone = ?, num_registre_corm = ? WHERE telephone = ?");
+            this.pst.setString(1, nouveauNom);
+            this.pst.setString(2, nouveauloc);
+            this.pst.setString(3, nouveauPhone);
+            //this.pst.setBlob(4, nouveauLogo);
+            this.pst.setString(4, nouveauNumcorm);
+            this.pst.setString(5, ancienPhone);
+            this.pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "modifié avec succès");
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            
+            
+        }
+    }
+    
+    // 
+    
+    // modifier les parametres d'un utilisateur cas où le logo change
+    public void modifierParametreLogochange(String ancienPhone, String nouveauNom, String nouveauloc, String nouveauPhone,File nouveauLogo,  String nouveauNumcorm) throws FileNotFoundException 
     {
         try {
             // on prepare notre requete
             this.pst = ConnexionBd.getConnexion().prepareStatement("UPDATE utilisateur SET nom = ?, localisation = ?, telephone = ?, logo = ?, num_registre_corm = ? WHERE telephone = ?");
-            InputStream f = new FileInputStream(nouveauLogo);
+            InputStream inpt = new FileInputStream(nouveauLogo);
             this.pst.setString(1, nouveauNom);
             this.pst.setString(2, nouveauloc);
             this.pst.setString(3, nouveauPhone);
-            this.pst.setBlob(4, f);
+            this.pst.setBlob(4, inpt);
             this.pst.setString(5, nouveauNumcorm);
             this.pst.setString(6, ancienPhone);
             this.pst.executeUpdate();
@@ -263,19 +310,21 @@ public class RequeteSql {
         }
     }
     
-    // afficher un utilisateur
+    // afficher les donnes d'un utilisateur
     
     public ResultSet afficheUser(String phone)
     {
         try {
             this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT * FROM utilisateur WHERE telephone = ?");
-            this.pst.setString(1, phone); // je recupere le numero de telephone de l'utilisateur dans le fichier user.txt
+            this.pst.setString(1, phone); 
             return this.pst.executeQuery();
         } catch (Exception e) {
             e.printStackTrace(); // on affiche l'exception dans la console
             return null;
         }
     }
+    
+    
     
     
 }

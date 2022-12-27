@@ -86,7 +86,7 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addGap(29, 29, 29)
                                 .addComponent(cmbnomarticlepoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,7 +97,7 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cmbnomarticlepoursuppression, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnsupprimerarticle, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
@@ -108,15 +108,11 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 16, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -128,10 +124,12 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
         pageaccueil.setVisible(true);
         pageaccueil.setLocationRelativeTo(null);
         // pour fermer le formulaire courant
-        dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // on fait en sorte que l'utilisateur ne puisse fermer la fenetre en cliquant sur la croix rouge
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         try {
             // TODO add your handling code here:
             ResultSet resultSet = new RequeteSql().afficherArticles();
@@ -145,18 +143,13 @@ public class FormulaireSupprimerArticle extends javax.swing.JFrame {
 
     private void btnsupprimerarticleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsupprimerarticleActionPerformed
         // TODO add your handling code here:
-        // on recupere l'indice de l'element dans la jcombobox
-            int index = cmbnomarticlepoursuppression.getSelectedIndex();
-            
-            // on supprime l'element selectionné dans la jcombobox
-           if(new RequeteSql().supprimerArticle(cmbnomarticlepoursuppression.getSelectedItem().toString()))
-           {
-               // on retire l'element supprimer supprimer de la jcombobox
-                cmbnomarticlepoursuppression.removeItemAt(index);
-           }
-            
-           
         
+        // on recupere l'indice de l'element dans la jcombobox
+        int index = cmbnomarticlepoursuppression.getSelectedIndex();
+        // on supprime l'article à partir du libele
+        new RequeteSql().supprimerArticleUser(cmbnomarticlepoursuppression.getSelectedItem().toString());
+        // on retire l'article dans la combobox
+        cmbnomarticlepoursuppression.removeItemAt(index);  
     }//GEN-LAST:event_btnsupprimerarticleActionPerformed
 
     /**
