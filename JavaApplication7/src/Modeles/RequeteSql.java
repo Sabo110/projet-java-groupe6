@@ -24,6 +24,7 @@ import java.sql.Blob;
 public class RequeteSql {
     private Statement statement;
     private PreparedStatement pst;
+    private ResultSet rs;
     
     
     // creeons la requete pour creer un client
@@ -110,6 +111,30 @@ public class RequeteSql {
         }
         
     }
+    
+    // recuperer l'id du client d'un utilisateur 
+    
+    public int getIdClientUser(String nom)
+    {
+        int id = 0;
+        try {
+            // on prepare notre requete
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT id FROM client WHERE nom = ? AND teluser = ?");
+            this.pst.setString(1, nom);
+            this.pst.setString(2, Fichier.lire(new File("D:/user.txt")));
+            this.rs = this.pst.executeQuery();
+            rs.next();
+            id  = rs.getInt("id");
+
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        return id;
+    }
+    
+    
     // pour modifier un client
     
     public void modifierClientUser(String anciennom, String nouveaunom, String nouveauphone)
@@ -182,6 +207,26 @@ public class RequeteSql {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    // recuperer l'id de l'article d'un utiisateur
+    
+    public int getIdArticleUser(String libele)
+    {
+        int id = 0;
+        try {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("SELECT id FROM article WHERE teluser = ? AND libele = ?");
+            this.pst.setString(1, Fichier.lire(new File("D:/user.txt")));
+            this.pst.setString(2, libele);
+            this.rs =  this.pst.executeQuery();
+            rs.next();
+            id =  rs.getInt("id");
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        return id;
+        
     }
     
     // recuperer un seul article
@@ -325,6 +370,40 @@ public class RequeteSql {
     }
     
     
+    // creons un devis
+    
+    public int creerDevis(Devis d)
+    {
+       int id = 0;
+        try {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("INSERT INTO devis (montant, teluser, id_cl) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            this.pst.setInt(1, d.getMontant());
+            this.pst.setString(2, d.getTeluser());
+            this.pst.setInt(3, d.getIdClient());
+            this.pst.executeUpdate();
+            this.rs = this.pst.getGeneratedKeys();
+            rs.next(); // on accede au prochain resultat
+            id = rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+    
+    // associons les articles au devis
+    
+    public void lierArticleDevis(int idarticle, int iddevis, int qt)
+    {
+        try {
+            this.pst = ConnexionBd.getConnexion().prepareStatement("INSERT INTO devis_article (quantite, id_ar, id_dv) VALUES (?,?,?)");
+            this.pst.setInt(1, qt);
+            this.pst.setInt(2, idarticle);
+            this.pst.setInt(3, iddevis);
+            this.pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     
 }

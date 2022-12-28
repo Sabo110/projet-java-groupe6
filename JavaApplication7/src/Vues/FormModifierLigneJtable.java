@@ -210,10 +210,10 @@ public class FormModifierLigneJtable extends javax.swing.JFrame {
         FormulaireCreerDevis.tbcreerdevis.setValueAt(newqt, num, 1);
         FormulaireCreerDevis.tbcreerdevis.setValueAt(newprix, num, 2);
         FormulaireCreerDevis.tbcreerdevis.setValueAt(Integer.parseInt(newqt)*Integer.parseInt(newprix), num, 3);
-        /*FormulaireCreerDevis frmCreerDevis = new FormulaireCreerDevis();
-        frmCreerDevis.setVisible(true);
-        frmCreerDevis.setLocationRelativeTo(null);*/
-        
+        // on met à jour le montant du devis
+        FormulaireCreerDevis.montdevis += Integer.parseInt(newqt)*Integer.parseInt(newprix);
+        FormulaireCreerDevis.montdevis -= Integer.parseInt(FormulaireCreerDevis.ancientotal);
+        FormulaireCreerDevis.lblmontanttotal.setText(String.valueOf(FormulaireCreerDevis.montdevis));
         this.dispose();
          
     }//GEN-LAST:event_jButton1ActionPerformed

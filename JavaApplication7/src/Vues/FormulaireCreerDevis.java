@@ -4,6 +4,7 @@
  */
 package Vues;
 
+import Modeles.Devis;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import Modeles.RequeteSql;
@@ -11,6 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Validateur.ValidateurFormDevis;
+import Modeles.RequeteSql;
+import Modeles.Fichier;
+import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,7 +26,9 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
     public static String ancienarticle;
     public static String ancienprix;
     public static String ancienqt;
+    public static String ancientotal;
     public static int numrow;
+    public static int montdevis = 0;
 
     /**
      * Creates new form FormulaireCreerDevis
@@ -57,6 +65,8 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
         btnmodifier = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        lblmontanttotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Creer un devis");
@@ -160,6 +170,10 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("Montant total du devis : ");
+
+        lblmontanttotal.setText("montant total");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -196,7 +210,12 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
                         .addGap(124, 124, 124)
                         .addComponent(btncreerdevis, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(34, 34, 34)
+                        .addComponent(lblmontanttotal)))
                 .addGap(46, 46, 46))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -225,7 +244,11 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(30, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(lblmontanttotal))
+                        .addContainerGap(23, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -293,6 +316,7 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
         // on ajoute une ligne
         int qt =  Integer.parseInt(spquantitearticlecreerdevis.getValue().toString());
         int pri = Integer.parseInt(cmbprixarticlecreerdevis.getSelectedItem().toString());
+        
         tbModel.addRow(
                 new Object[]{
                     cmblibelearticlecreerdevis.getSelectedItem().toString(), 
@@ -300,6 +324,11 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
                     cmbprixarticlecreerdevis.getSelectedItem().toString(),
                     String.valueOf(pri*qt)
                 });
+        // on incremente le montant du devis
+        this.montdevis += (qt*pri);
+        // on affiche le montant dans le label
+        lblmontanttotal.setText(String.valueOf(montdevis));
+        
     }//GEN-LAST:event_btnajouterarticlecreerdevisActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -353,6 +382,34 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
     private void btncreerdevisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreerdevisActionPerformed
         // TODO add your handling code here:
         
+        if(ValidateurFormDevis.validercreer(tbcreerdevis))
+        {
+            // on recupere id du client
+            int idcl = new RequeteSql().getIdClientUser(cmbnomclientcreerdevis.getSelectedItem().toString());
+            // on recupere le numero de l'utilisateur
+            
+            String teluser = Fichier.lire(new File("D:/user.txt"));
+            // on creer le devis et on retourne son id
+            Devis d = new Devis(montdevis, idcl, teluser);
+            int idDevis = new RequeteSql().creerDevis(d);
+            // maintenant on va inserer les article du devis
+            // recuperons le nombre de ligne du devis
+            int nbligne = tbcreerdevis.getRowCount();
+            for (int i = 0; i < nbligne; i++) {
+                // on associe l'article de la ligne au devis
+                // on recupere id de l'article
+                int idart = new RequeteSql().getIdArticleUser(tbcreerdevis.getValueAt(i, 0).toString());
+                // je recupere la quantite de l'article
+                int qtart = Integer.parseInt(tbcreerdevis.getValueAt(i, 1).toString());
+                // on associe proprement l'article au deis
+                new RequeteSql().lierArticleDevis(idart, idDevis, qtart);
+                
+            }
+            // on affiche un message de succes
+            JOptionPane.showMessageDialog(null, "devis creer avec succès");
+          
+        }
+        
     }//GEN-LAST:event_btncreerdevisActionPerformed
 
     private void btnmodifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodifierActionPerformed
@@ -364,6 +421,7 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
             this.ancienarticle = tbcreerdevis.getValueAt(numrow, 0).toString();
             this.ancienqt = tbcreerdevis.getValueAt(numrow, 1).toString();
             this.ancienprix = tbcreerdevis.getValueAt(numrow, 2).toString();
+            this.ancientotal = tbcreerdevis.getValueAt(numrow, 3).toString();
             btnajouterarticlecreerdevis.setEnabled(false);
             btncreerdevis.setEnabled(false);
             btnmodifier.setEnabled(false);
@@ -375,7 +433,14 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        // je recupere le total de cette article 
+        int tot = Integer.parseInt(tbcreerdevis.getValueAt(tbcreerdevis.getSelectedRow(), 3).toString());
+        // je decremente le montant du devis
+        this.montdevis -= tot;
+        // et je l'affiche dans le label
+        lblmontanttotal.setText(String.valueOf(montdevis));
         ((DefaultTableModel)tbcreerdevis.getModel()).removeRow(tbcreerdevis.getSelectedRow());
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -436,8 +501,10 @@ public class FormulaireCreerDevis extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    public static javax.swing.JLabel lblmontanttotal;
     private javax.swing.JLabel lblnomclient;
     private javax.swing.JSpinner spquantitearticlecreerdevis;
     public static javax.swing.JTable tbcreerdevis;
